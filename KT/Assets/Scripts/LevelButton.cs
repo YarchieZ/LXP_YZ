@@ -1,29 +1,40 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelButton : MonoBehaviour
 {
-    [SerializeField] private int _levelCount;
-    [SerializeField] private GameObject buttonPrefab;
-    [SerializeField] private Transform root;
+    [SerializeField] private TextMeshProUGUI _textMeshPro;
+    [SerializeField] private GameObject[] stars;
+    [SerializeField] private GameObject locker;
+    [SerializeField] private GameObject starRoot;
 
-    private void Awake()
+    public void Init(int levelNumber, int starCount, bool isCompleted)
     {
-        GenerateLevelButtons();
-    }
-
-    private void GenerateLevelButtons()
-    {
-        for (int i = 0; i < _levelCount;  i++)
+        if (isCompleted)
         {
-            Instantiate(buttonPrefab, root);
+            _textMeshPro.text = $"{levelNumber}";
+            if (starCount > 0)
+            {
+                for (int i = 0; i < stars.Length; i++)
+                {
+                    stars[i].SetActive(i < starCount);
+                }
+            }
+            else
+            {
+                starRoot.SetActive(false);
+            }
+            
         }
-    }
-
-    private void ClearRoot()
-    {
-        for (int i = 0; i < root.childCount; ++i)
+        else
         {
-            Destroy(root.GetChild(i).gameObject);
+            locker.SetActive(true);
+            starRoot.SetActive(false);
+            Button btn = GetComponent<Button>();
+            btn.interactable = false;
         }
+        
+        
     }
 }
